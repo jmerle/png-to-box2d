@@ -1,6 +1,6 @@
 {
   "name": "png-to-box2d",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "A CLI to convert PNG images to Box2D shape data",
   "repository": "jmerle/png-to-box2d",
   "homepage": "https://github.com/jmerle/png-to-box2d",
