@@ -40,10 +40,8 @@ export default class Generate extends Command {
       args.output = `${args.input}.json`;
     }
 
-    const requiredCommands = ['convert', 'potrace', 'inkscape', 'mogrify'];
-    for (const command of requiredCommands) {
-      await this.ensureCommandExists(command);
-    }
+    await this.ensureCommandExists('convert');
+    await this.ensureCommandExists('potrace');
 
     const inputExists = await fs.pathExists(args.input);
     if (inputExists) {

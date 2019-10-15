@@ -17,9 +17,8 @@ $ yarn global add png-to-box2d
 ```
 
 The following software must be available on your `PATH`:
-* [ImageMagick's](https://imagemagick.org/) `convert` & `mogrify`
+* [ImageMagick's](https://imagemagick.org/) `convert`
 * [`potrace`](http://potrace.sourceforge.net/)
-* [`inkscape`](https://inkscape.org/)
 
 # Commands
 
