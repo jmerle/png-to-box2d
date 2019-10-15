@@ -1,0 +1,87 @@
+{
+  "name": "png-to-box2d",
+  "version": "1.0.0",
+  "description": "A CLI to convert PNG images to Box2D shape data",
+  "repository": "jmerle/png-to-box2d",
+  "homepage": "https://github.com/jmerle/png-to-box2d",
+  "bugs": "https://github.com/jmerle/png-to-box2d/issues",
+  "author": "Jasper van Merle",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "bin": {
+    "png-to-box2d": "./bin/run"
+  },
+  "keywords": [
+    "oclif",
+    "box2d"
+  ],
+  "files": [
+    "/bin",
+    "/lib",
+    "/oclif.manifest.json"
+  ],
+  "scripts": {
+    "lint": "yarn lint:tslint && yarn lint:prettier",
+    "lint:prettier": "prettier --check --ignore-path .gitignore '**/*.{js,ts,scss,yml,json}'",
+    "lint:tslint": "tslint -p tsconfig.json -c tslint.json -t stylish",
+    "fix": "yarn fix:tslint && yarn fix:prettier",
+    "fix:prettier": "prettier --write --ignore-path .gitignore '**/*.{js,ts,scss,yml,json}'",
+    "fix:tslint": "yarn lint:tslint --fix",
+    "postpack": "rm -f oclif.manifest.json",
+    "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
+    "readme": "oclif-dev readme",
+    "release": "np"
+  },
+  "dependencies": {
+    "@oclif/command": "^1",
+    "@oclif/config": "^1",
+    "@oclif/plugin-help": "^2",
+    "tslib": "^1"
+  },
+  "devDependencies": {
+    "@oclif/dev-cli": "^1",
+    "@oclif/tslint": "^3",
+    "@types/node": "^10",
+    "globby": "^10",
+    "husky": "^3.0.9",
+    "lint-staged": "^9.4.2",
+    "np": "^5.1.1",
+    "prettier": "^1.18.2",
+    "ts-node": "^8",
+    "tslint": "^5.20.0",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.3"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "oclif": {
+    "commands": "./lib/commands",
+    "bin": "png-to-box2d",
+    "plugins": [
+      "@oclif/plugin-help"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.ts": [
+      "yarn lint:tslint --fix",
+      "prettier --write",
+      "git add"
+    ],
+    "*.{scss,yml,json}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "prettier": {
+    "printWidth": 120,
+    "singleQuote": true,
+    "trailingComma": "all"
+  }
+}
