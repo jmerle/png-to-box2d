@@ -71,6 +71,9 @@
       "@oclif/plugin-help"
     ]
   },
+  "np": {
+    "tests": false
+  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
