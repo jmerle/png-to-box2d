@@ -29,7 +29,10 @@ Converted image in images/cannon.png to triangles in out/triangles.json
     }),
     tolerance: flags.option<number>({
       char: 't',
-      description: 'path tolerance in px where less tolerance means more triangles per shape',
+      description: `
+path tolerance in px where less tolerance means more triangles per shape
+see https://mourner.github.io/simplify-js/ for more information
+      `.trim(),
       default: 2.5,
       parse: parseFloat,
     }),

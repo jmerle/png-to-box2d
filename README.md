@@ -86,7 +86,10 @@ ARGUMENTS
 OPTIONS
   -h, --help                 show CLI help
   -o, --overwrite            overwrite the output file if it exists
+
   -t, --tolerance=tolerance  [default: 2.5] path tolerance in px where less tolerance means more triangles per shape
+                             see https://mourner.github.io/simplify-js/ for more information
+
   -v, --verbose
 
 EXAMPLES
