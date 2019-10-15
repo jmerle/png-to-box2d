@@ -85,8 +85,8 @@ Converted triangles in out/triangles.json to image in out/image.png
     const canvas = createCanvas(width, height);
     const ctx = canvas.getContext('2d');
 
-    ctx.strokeStyle = '#000';
-    ctx.fillStyle = '#bdc3c7';
+    ctx.strokeStyle = 'rgba(0, 0, 0, 1.0)';
+    ctx.fillStyle = 'rgba(173, 216, 230, 1.0)';
 
     for (const triangleList of shapes) {
       for (const triangle of triangleList) {
