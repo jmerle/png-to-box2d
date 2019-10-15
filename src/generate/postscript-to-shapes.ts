@@ -12,6 +12,7 @@ let currentPath: Point[];
 let currentAbsolutePosition: Point;
 let scale: Point;
 let height: number;
+let simplifyTolerance: number;
 
 function createShape(): Shape {
   return {
@@ -20,7 +21,7 @@ function createShape(): Shape {
   };
 }
 
-function reset(): void {
+function reset(tolerance: number): void {
   shapes = [];
 
   currentShape = createShape();
@@ -28,6 +29,8 @@ function reset(): void {
   currentAbsolutePosition = { x: 0, y: 0 };
   scale = { x: 1.0, y: 1.0 };
   height = 0;
+
+  simplifyTolerance = tolerance;
 }
 
 function addPointToCurrentPath(x: number, y: number): void {
@@ -38,7 +41,7 @@ function addPointToCurrentPath(x: number, y: number): void {
 }
 
 function endCurrentPath(): void {
-  currentPath = simplify(currentPath, 5);
+  currentPath = simplify(currentPath, simplifyTolerance);
 
   if (currentShape.mainPath === null) {
     currentShape.mainPath = currentPath;
@@ -87,8 +90,8 @@ function processLine(line: string): void {
   }
 }
 
-export async function postScriptToShapes(inputPath: string, outputPath: string): Promise<void> {
-  reset();
+export async function postScriptToShapes(inputPath: string, outputPath: string, tolerance: number): Promise<void> {
+  reset(tolerance);
 
   const inputBuffer = await fs.readFile(inputPath);
   const inputLines = inputBuffer

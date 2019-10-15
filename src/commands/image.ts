@@ -50,6 +50,8 @@ export default class Image extends BaseCommand {
   }
 
   private async generateImage(inputPath: string, outputPath: string): Promise<void> {
+    this.info(`input: ${inputPath}, output: ${outputPath}`);
+
     const inputBuffer = await fs.readFile(inputPath);
     const inputData = JSON.parse(inputBuffer.toString());
     const shapes: Array<Array<[Point, Point, Point]>> = inputData.shapes;

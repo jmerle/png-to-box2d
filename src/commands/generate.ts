@@ -18,6 +18,12 @@ export default class Generate extends BaseCommand {
       description: 'overwrite the output file if it exists',
       default: false,
     }),
+    tolerance: flags.option<number>({
+      char: 't',
+      description: 'path tolerance in px where less tolerance means more triangles per shape',
+      default: 2.5,
+      parse: parseFloat,
+    }),
   };
 
   public static args = [
@@ -36,6 +42,10 @@ export default class Generate extends BaseCommand {
   public async run(): Promise<void> {
     if (this.args.output === Generate.args[1].default) {
       this.args.output = `${this.args.input}.json`;
+    }
+
+    if (this.flags.tolerance < 0.01) {
+      this.err('Tolerance should be at least 0.01');
     }
 
     await this.ensureCommandExists('convert');
@@ -58,7 +68,7 @@ export default class Generate extends BaseCommand {
       }
     }
 
-    await this.generateShapeData(this.args.input, this.args.output);
+    await this.generateShapeData(this.args.input, this.args.output, this.flags.tolerance);
   }
 
   private async ensureCommandExists(command: string): Promise<void> {
@@ -70,9 +80,8 @@ export default class Generate extends BaseCommand {
   }
 
   // Most of the logic in this method comes from https://github.com/anko/image-to-box2d-body
-  private async generateShapeData(inputPath: string, outputPath: string): Promise<void> {
-    this.debug(`inputPath: ${inputPath}`);
-    this.debug(`outputPath: ${outputPath}`);
+  private async generateShapeData(inputPath: string, outputPath: string, tolerance: number): Promise<void> {
+    this.info(`input: ${inputPath}, output: ${outputPath}, tolerance: ${tolerance}`);
 
     // Extract the alpha channel into a separate image
     const alphaPath = this.getTempPath(inputPath, 'alpha.png');
@@ -97,12 +106,12 @@ export default class Generate extends BaseCommand {
       thresholdedAlphaPath,
     );
 
-    // Parse the traced PostScript file and convert it to a JSON format of shapes
+    // Parse the traced PostScript file and convert it to a JSON file containing all shapes
     const shapesPath = this.getTempPath(inputPath, 'shapes.json');
     this.info(`Converting ${tracedPath} to shapes in ${shapesPath}`);
-    await postScriptToShapes(tracedPath, shapesPath);
+    await postScriptToShapes(tracedPath, shapesPath, tolerance);
 
-    // Convert the shape JSON data into triangle JSON data
+    // Convert the shape data into triangle data
     this.info(`Converting ${shapesPath} to triangle shapes in ${outputPath}`);
     await fs.ensureFile(outputPath);
     await shapesToTriangles(shapesPath, outputPath);
