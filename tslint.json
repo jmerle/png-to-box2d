@@ -6,7 +6,6 @@
     "object-literal-sort-keys": false,
     "no-implicit-dependencies": [true, "dev"],
     "no-duplicate-imports": [true, { "allow-namespace-imports": true }],
-    "typedef": [true, "call-signature", "parameter", "property-declaration"],
-    "no-shadowed-variable": false
+    "typedef": [true, "call-signature", "parameter", "property-declaration"]
   }
 }

@@ -1,4 +1,5 @@
 import { Command, flags } from '@oclif/command';
+import * as fs from 'fs-extra';
 
 export default class Image extends Command {
   public static description = 'convert generated Box2D shape data to an image for debugging';
@@ -12,6 +13,11 @@ To do
 
   public static flags = {
     help: flags.help({ char: 'h' }),
+    overwrite: flags.boolean({
+      char: 'o',
+      description: 'overwrite the output file if it exists',
+      default: false,
+    }),
   };
 
   public static args = [
@@ -28,9 +34,30 @@ To do
   ];
 
   public async run(): Promise<void> {
+    // tslint:disable-next-line:no-shadowed-variable
     const { args, flags } = this.parse(Image);
 
-    this.log(`Input: ${args.input}`);
-    this.log(`Output: ${args.output}`);
+    const inputExists = await fs.pathExists(args.input);
+    if (inputExists) {
+      const stat = await fs.stat(args.input);
+
+      if (!stat.isFile() || !args.input.endsWith('.json')) {
+        this.error('The input path does not point to a JSON file', { exit: 1 });
+      }
+    } else {
+      this.error('The input path does not exist', { exit: 1 });
+    }
+
+    if (!flags.overwrite) {
+      const outputExists = await fs.pathExists(args.output);
+      if (!outputExists) {
+        this.error('The output file already exists, use --overwrite to overwrite it', { exit: 1 });
+      }
+    }
+  }
+
+  private async generateImage(inputPath: string, outputPath: string): Promise<void> {
+    this.log(`Input: ${inputPath}`);
+    this.log(`Output: ${outputPath}`);
   }
 }

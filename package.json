@@ -38,12 +38,14 @@
     "@oclif/config": "^1",
     "@oclif/plugin-help": "^2",
     "command-exists": "^1.2.8",
+    "fs-extra": "^8.1.0",
     "tslib": "^1"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1",
     "@oclif/tslint": "^3",
     "@types/command-exists": "^1.2.0",
+    "@types/fs-extra": "^8.0.0",
     "@types/node": "^10",
     "globby": "^10",
     "husky": "^3.0.9",
