@@ -15,7 +15,7 @@ $ npm install --global png-to-box2d
 $ yarn global add png-to-box2d
 ```
 
-The following software must be available on your `PATH`:
+The following commands must be available on your `PATH`:
 * [ImageMagick's `convert`](https://imagemagick.org/)
 * [`potrace`](http://potrace.sourceforge.net/)
 
