@@ -41,7 +41,8 @@ ARGUMENTS
   OUTPUT  [default: {INPUT}.json] where the generated JSON file should be placed
 
 OPTIONS
-  -h, --help  show CLI help
+  -h, --help       show CLI help
+  -o, --overwrite  overwrite the output file if it exists
 
 EXAMPLES
   $ png-to-box2d generate castle.png
@@ -83,7 +84,8 @@ ARGUMENTS
   OUTPUT  where the generated PNG image should be placed
 
 OPTIONS
-  -h, --help  show CLI help
+  -h, --help       show CLI help
+  -o, --overwrite  overwrite the output file if it exists
 
 EXAMPLE
   $ png-to-box2d image castle.png.json 
