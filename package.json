@@ -37,13 +37,16 @@
     "@oclif/command": "^1",
     "@oclif/config": "^1",
     "@oclif/plugin-help": "^2",
+    "canvas": "^2.6.0",
     "command-exists": "^1.2.8",
+    "execa": "^3.0.0",
     "fs-extra": "^8.1.0",
+    "poly2tri": "^1.5.0",
+    "simplify-js": "^1.2.3",
     "tslib": "^1"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1",
-    "@oclif/tslint": "^3",
     "@types/command-exists": "^1.2.0",
     "@types/fs-extra": "^8.0.0",
     "@types/node": "^10",

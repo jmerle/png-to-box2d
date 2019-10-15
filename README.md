@@ -43,13 +43,6 @@ ARGUMENTS
 OPTIONS
   -h, --help       show CLI help
   -o, --overwrite  overwrite the output file if it exists
-
-EXAMPLES
-  $ png-to-box2d generate castle.png
-  To do
-
-  $ png-to-box2d generate castle.png castle-shape.json
-  To do
 ```
 
 _See code: [src/commands/generate.ts](https://github.com/jmerle/png-to-box2d/blob/v1.0.0/src/commands/generate.ts)_
@@ -86,10 +79,6 @@ ARGUMENTS
 OPTIONS
   -h, --help       show CLI help
   -o, --overwrite  overwrite the output file if it exists
-
-EXAMPLE
-  $ png-to-box2d image castle.png.json 
-  To do
 ```
 
 _See code: [src/commands/image.ts](https://github.com/jmerle/png-to-box2d/blob/v1.0.0/src/commands/image.ts)_

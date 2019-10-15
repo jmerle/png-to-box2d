@@ -108,3 +108,4 @@ package-lock.json
 /lib
 /tmp
 oclif.manifest.json
+images/*.json

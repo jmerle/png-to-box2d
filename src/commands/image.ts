@@ -1,15 +1,9 @@
 import { Command, flags } from '@oclif/command';
+import { Canvas, createCanvas } from 'canvas';
 import * as fs from 'fs-extra';
 
 export default class Image extends Command {
   public static description = 'convert generated Box2D shape data to an image for debugging';
-
-  // TODO
-  public static examples = [
-    `$ png-to-box2d image castle.png.json 
-To do
-`,
-  ];
 
   public static flags = {
     help: flags.help({ char: 'h' }),
@@ -49,14 +43,67 @@ To do
 
     if (!flags.overwrite) {
       const outputExists = await fs.pathExists(args.output);
-      if (!outputExists) {
+      if (outputExists) {
         this.error('The output file already exists, use --overwrite to overwrite it', { exit: 1 });
       }
     }
+
+    await this.generateImage(args.input, args.output);
   }
 
   private async generateImage(inputPath: string, outputPath: string): Promise<void> {
-    this.log(`Input: ${inputPath}`);
-    this.log(`Output: ${outputPath}`);
+    const inputBuffer = await fs.readFile(inputPath);
+    const inputData = JSON.parse(inputBuffer.toString());
+    const shapes: Array<Array<[Point, Point, Point]>> = inputData.shapes;
+
+    const width = Math.max(
+      ...shapes.map(triangleList => {
+        return Math.max(
+          ...triangleList.map(triangle => {
+            return Math.max(...triangle.map(point => point.x));
+          }),
+        );
+      }),
+    );
+
+    const height = Math.max(
+      ...shapes.map(triangleList => {
+        return Math.max(
+          ...triangleList.map(triangle => {
+            return Math.max(...triangle.map(point => point.y));
+          }),
+        );
+      }),
+    );
+
+    const canvas = createCanvas(width, height);
+    const ctx = canvas.getContext('2d');
+
+    ctx.strokeStyle = 'rgba(0, 0, 0, 1.0)';
+    ctx.fillStyle = 'rgba(173, 216, 230, 1.0)';
+
+    for (const triangleList of shapes) {
+      for (const triangle of triangleList) {
+        ctx.beginPath();
+
+        for (let i = 0; i < triangle.length; i++) {
+          const { x, y } = triangle[i];
+
+          if (i === 0) {
+            ctx.moveTo(x, y);
+          } else {
+            ctx.lineTo(x, y);
+          }
+        }
+
+        ctx.closePath();
+
+        ctx.stroke();
+        ctx.fill();
+      }
+    }
+
+    await fs.ensureFile(outputPath);
+    await fs.writeFile(outputPath, canvas.toBuffer('image/png'));
   }
 }

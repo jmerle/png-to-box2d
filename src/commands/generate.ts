@@ -1,19 +1,14 @@
 import { Command, flags } from '@oclif/command';
 import * as commandExists from 'command-exists';
+import * as execa from 'execa';
 import * as fs from 'fs-extra';
+import * as os from 'os';
+import * as path from 'path';
+import { postScriptToShapes } from '../generate/postscript-to-shapes';
+import { shapesToTriangles } from '../generate/shapes-to-triangles';
 
 export default class Generate extends Command {
   public static description = 'convert a PNG image to Box2D shape data';
-
-  // TODO
-  public static examples = [
-    `$ png-to-box2d generate castle.png
-To do
-`,
-    `$ png-to-box2d generate castle.png castle-shape.json
-To do
-`,
-  ];
 
   public static flags = {
     help: flags.help({ char: 'h' }),
@@ -67,7 +62,7 @@ To do
       }
     }
 
-    this.generateShapeData(args.input, args.output);
+    await this.generateShapeData(args.input, args.output);
   }
 
   private async ensureCommandExists(command: string): Promise<void> {
@@ -78,8 +73,60 @@ To do
     }
   }
 
+  // The logic in this method comes from https://github.com/anko/image-to-box2d-body
   private async generateShapeData(inputPath: string, outputPath: string): Promise<void> {
-    this.log(`Input: ${inputPath}`);
-    this.log(`Output: ${outputPath}`);
+    // Extract the alpha channel into a separate image
+    const alphaPath = this.getTempPath(inputPath, 'alpha.png');
+    await this.executeCommand('convert', inputPath, '-alpha', 'extract', alphaPath);
+
+    // Threshold and negate the alpha channel image. Also convert to the (extremely simple
+    // and text-based) PPM image format, because that's what potrace understands.
+    const thresholdedAlphaPath = this.getTempPath(inputPath, 'tresholded-alpha.ppm');
+    await this.executeCommand('convert', alphaPath, '-threshold', '75%%', '-negate', thresholdedAlphaPath);
+
+    // Trace thresholded image into a PostScript file, using the most verbose,
+    // least-compressed options available. This makes it easier to parse later.
+    const tracedPath = this.getTempPath(inputPath, 'traced.ps');
+    await this.executeCommand(
+      'potrace',
+      '--longcoding',
+      '--cleartext',
+      '--alphamax',
+      '0',
+      '--output',
+      tracedPath,
+      thresholdedAlphaPath,
+    );
+
+    // Parse the traced PostScript file and convert it to a JSON format of shapes
+    const shapesPath = this.getTempPath(inputPath, 'shapes.json');
+    this.log(`Converting ${tracedPath} to shapes in ${shapesPath}`);
+    await postScriptToShapes(tracedPath, shapesPath);
+
+    // Convert the shape JSON data into triangle JSON data
+    this.log(`Converting ${shapesPath} to triangle shapes in ${outputPath}`);
+    await fs.ensureFile(outputPath);
+    await shapesToTriangles(shapesPath, outputPath);
+  }
+
+  private async executeCommand(command: string, ...args: string[]): Promise<void> {
+    let cmd = command;
+    if (args.length > 0) {
+      cmd += ' ' + args.join(' ');
+    }
+
+    this.log(`$ ${cmd}`);
+
+    try {
+      await execa(command, args);
+    } catch (err) {
+      this.error(err.stderr, { exit: 1 });
+    }
+  }
+
+  private getTempPath(inputPath: string, tempFilename: string): string {
+    const inputFilename = path.basename(inputPath, path.extname(inputPath));
+    const filename = `${inputFilename}-${tempFilename}`;
+    return path.resolve(os.tmpdir(), filename);
   }
 }
