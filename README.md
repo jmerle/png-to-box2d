@@ -4,6 +4,7 @@ PNG to Box2D
 A CLI to convert PNG images to Box2D shape data. Based on [anko/image-to-box2d-body](https://github.com/anko/image-to-box2d-body).
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
+[![Build Status](https://dev.azure.com/jmerle/png-to-box2d/_apis/build/status/Build?branchName=master)](https://dev.azure.com/jmerle/png-to-box2d/_build/latest?definitionId=8&branchName=master)
 [![Version](https://img.shields.io/npm/v/png-to-box2d.svg)](https://npmjs.org/package/png-to-box2d)
 [![License](https://img.shields.io/npm/l/png-to-box2d.svg)](https://github.com/jmerle/png-to-box2d/blob/master/package.json)
 
