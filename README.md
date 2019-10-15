@@ -48,6 +48,22 @@ The `shapes` array contains all shapes. Each shape is an array of triangles, eac
 
 The [`image`](#png-to-box2d-image-input-output) command can be used to visualize the generated JSON file. Simply run `png-to-box2d image triangles.json image.png` and the `image.png` file will contain a visualization of the triangles defined in `triangles.json`.
 
+# Example
+
+`images/castle.png`:
+![](./images/castle.png)
+
+```
+$ png-to-box2d generate images/castle.png out/triangles.json
+Converted image in images/castle.png to triangles in out/triangles.json
+
+$ png-to-box2d image out/triangles.json out/image.png
+Converted triangles in out/triangles.json to image in out/image.png
+```
+
+`out/image.png`:
+![](./images/castle-result.png)
+
 # Commands
 
 <!-- commands -->
