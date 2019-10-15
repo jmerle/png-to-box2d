@@ -1,4 +1,4 @@
-import { Command, flags } from '@oclif/command';
+import { flags } from '@oclif/command';
 import * as commandExists from 'command-exists';
 import * as execa from 'execa';
 import * as fs from 'fs-extra';
@@ -10,6 +10,15 @@ import { shapesToTriangles } from '../generate/shapes-to-triangles';
 
 export default class Generate extends BaseCommand {
   public static description = 'convert a PNG image to Box2D shape data';
+
+  public static examples = [
+    `$ png-to-box2d generate images/castle.png
+Converted image in images/cannon.png to triangles in images/castle.png.json
+`,
+    `$ png-to-box2d generate --overwrite --tolerance 5 images/castle.png out/triangles.json
+Converted image in images/cannon.png to triangles in out/triangles.json
+`,
+  ];
 
   public static flags = {
     ...BaseCommand.flags,

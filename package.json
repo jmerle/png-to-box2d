@@ -82,7 +82,7 @@
       "prettier --write",
       "git add"
     ],
-    "*.{scss,yml,json}": [
+    "*.json": [
       "prettier --write",
       "git add"
     ]

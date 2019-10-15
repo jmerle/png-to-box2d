@@ -6,6 +6,12 @@ import { BaseCommand } from '../BaseCommand';
 export default class Image extends BaseCommand {
   public static description = 'convert generated Box2D shape data to an image for debugging';
 
+  public static examples = [
+    `$ png-to-box2d image out/triangles.json out/image.png
+Converted triangles in out/triangles.json to image in out/image.png
+`,
+  ];
+
   public static flags = {
     ...BaseCommand.flags,
     overwrite: flags.boolean({
