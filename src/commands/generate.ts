@@ -4,14 +4,15 @@ import * as execa from 'execa';
 import * as fs from 'fs-extra';
 import * as os from 'os';
 import * as path from 'path';
+import { BaseCommand } from '../BaseCommand';
 import { postScriptToShapes } from '../generate/postscript-to-shapes';
 import { shapesToTriangles } from '../generate/shapes-to-triangles';
 
-export default class Generate extends Command {
+export default class Generate extends BaseCommand {
   public static description = 'convert a PNG image to Box2D shape data';
 
   public static flags = {
-    help: flags.help({ char: 'h' }),
+    ...BaseCommand.flags,
     overwrite: flags.boolean({
       char: 'o',
       description: 'overwrite the output file if it exists',
@@ -33,46 +34,46 @@ export default class Generate extends Command {
   ];
 
   public async run(): Promise<void> {
-    // tslint:disable-next-line:no-shadowed-variable
-    const { args, flags } = this.parse(Generate);
-
-    if (args.output === Generate.args[1].default) {
-      args.output = `${args.input}.json`;
+    if (this.args.output === Generate.args[1].default) {
+      this.args.output = `${this.args.input}.json`;
     }
 
     await this.ensureCommandExists('convert');
     await this.ensureCommandExists('potrace');
 
-    const inputExists = await fs.pathExists(args.input);
+    const inputExists = await fs.pathExists(this.args.input);
     if (inputExists) {
-      const stat = await fs.stat(args.input);
+      const stat = await fs.stat(this.args.input);
       if (!stat.isFile()) {
-        this.error('The input path does not point to a file', { exit: 1 });
+        this.err('The input path does not point to a file');
       }
     } else {
-      this.error('The input path does not exist', { exit: 1 });
+      this.err('The input path does not exist');
     }
 
-    if (!flags.overwrite) {
-      const outputExists = await fs.pathExists(args.output);
+    if (!this.flags.overwrite) {
+      const outputExists = await fs.pathExists(this.args.output);
       if (outputExists) {
-        this.error('The output file already exists, use --overwrite to overwrite it', { exit: 1 });
+        this.err('The output file already exists, use --overwrite to overwrite it');
       }
     }
 
-    await this.generateShapeData(args.input, args.output);
+    await this.generateShapeData(this.args.input, this.args.output);
   }
 
   private async ensureCommandExists(command: string): Promise<void> {
     try {
       await commandExists(command);
     } catch (err) {
-      this.error(`${command} must be available on your PATH`, { exit: 1 });
+      this.err(`${command} must be available on your PATH`);
     }
   }
 
-  // The logic in this method comes from https://github.com/anko/image-to-box2d-body
+  // Most of the logic in this method comes from https://github.com/anko/image-to-box2d-body
   private async generateShapeData(inputPath: string, outputPath: string): Promise<void> {
+    this.debug(`inputPath: ${inputPath}`);
+    this.debug(`outputPath: ${outputPath}`);
+
     // Extract the alpha channel into a separate image
     const alphaPath = this.getTempPath(inputPath, 'alpha.png');
     await this.executeCommand('convert', inputPath, '-alpha', 'extract', alphaPath);
@@ -98,13 +99,15 @@ export default class Generate extends Command {
 
     // Parse the traced PostScript file and convert it to a JSON format of shapes
     const shapesPath = this.getTempPath(inputPath, 'shapes.json');
-    this.log(`Converting ${tracedPath} to shapes in ${shapesPath}`);
+    this.info(`Converting ${tracedPath} to shapes in ${shapesPath}`);
     await postScriptToShapes(tracedPath, shapesPath);
 
     // Convert the shape JSON data into triangle JSON data
-    this.log(`Converting ${shapesPath} to triangle shapes in ${outputPath}`);
+    this.info(`Converting ${shapesPath} to triangle shapes in ${outputPath}`);
     await fs.ensureFile(outputPath);
     await shapesToTriangles(shapesPath, outputPath);
+
+    this.log(`Converted image in ${inputPath} to triangles in ${outputPath}`);
   }
 
   private async executeCommand(command: string, ...args: string[]): Promise<void> {
@@ -113,12 +116,13 @@ export default class Generate extends Command {
       cmd += ' ' + args.join(' ');
     }
 
-    this.log(`$ ${cmd}`);
+    this.info(`$ ${cmd}`);
 
     try {
       await execa(command, args);
     } catch (err) {
-      this.error(err.stderr, { exit: 1 });
+      this.err(`Something went wrong while running '${cmd}'`, false);
+      this.err(err.stderr);
     }
   }
 

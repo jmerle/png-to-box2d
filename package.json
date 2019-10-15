@@ -47,6 +47,7 @@
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1",
+    "@oclif/parser": "^3.8.4",
     "@types/command-exists": "^1.2.0",
     "@types/fs-extra": "^8.0.0",
     "@types/node": "^10",

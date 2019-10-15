@@ -1,12 +1,13 @@
-import { Command, flags } from '@oclif/command';
-import { Canvas, createCanvas } from 'canvas';
+import { flags } from '@oclif/command';
+import { createCanvas } from 'canvas';
 import * as fs from 'fs-extra';
+import { BaseCommand } from '../BaseCommand';
 
-export default class Image extends Command {
+export default class Image extends BaseCommand {
   public static description = 'convert generated Box2D shape data to an image for debugging';
 
   public static flags = {
-    help: flags.help({ char: 'h' }),
+    ...BaseCommand.flags,
     overwrite: flags.boolean({
       char: 'o',
       description: 'overwrite the output file if it exists',
@@ -28,27 +29,24 @@ export default class Image extends Command {
   ];
 
   public async run(): Promise<void> {
-    // tslint:disable-next-line:no-shadowed-variable
-    const { args, flags } = this.parse(Image);
-
-    const inputExists = await fs.pathExists(args.input);
+    const inputExists = await fs.pathExists(this.args.input);
     if (inputExists) {
-      const stat = await fs.stat(args.input);
+      const stat = await fs.stat(this.args.input);
       if (!stat.isFile()) {
-        this.error('The input path does not point to a file', { exit: 1 });
+        this.err('The input path does not point to a file');
       }
     } else {
-      this.error('The input path does not exist', { exit: 1 });
+      this.err('The input path does not exist');
     }
 
-    if (!flags.overwrite) {
-      const outputExists = await fs.pathExists(args.output);
+    if (!this.flags.overwrite) {
+      const outputExists = await fs.pathExists(this.args.output);
       if (outputExists) {
-        this.error('The output file already exists, use --overwrite to overwrite it', { exit: 1 });
+        this.err('The output file already exists, use --overwrite to overwrite it');
       }
     }
 
-    await this.generateImage(args.input, args.output);
+    await this.generateImage(this.args.input, this.args.output);
   }
 
   private async generateImage(inputPath: string, outputPath: string): Promise<void> {
@@ -105,5 +103,7 @@ export default class Image extends Command {
 
     await fs.ensureFile(outputPath);
     await fs.writeFile(outputPath, canvas.toBuffer('image/png'));
+
+    this.log(`Converted triangles in ${inputPath} to image in ${outputPath}`);
   }
 }

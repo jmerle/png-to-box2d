@@ -12,12 +12,12 @@ A CLI to convert PNG images to Box2D shape data. Based on [anko/image-to-box2d-b
 
 ```sh-session
 $ npm install --global png-to-box2d
-$ # or
+# or
 $ yarn global add png-to-box2d
 ```
 
 The following software must be available on your `PATH`:
-* [ImageMagick's](https://imagemagick.org/) `convert`
+* [ImageMagick's `convert`](https://imagemagick.org/)
 * [`potrace`](http://potrace.sourceforge.net/)
 
 # Commands
@@ -42,6 +42,7 @@ ARGUMENTS
 OPTIONS
   -h, --help       show CLI help
   -o, --overwrite  overwrite the output file if it exists
+  -v, --verbose
 ```
 
 _See code: [src/commands/generate.ts](https://github.com/jmerle/png-to-box2d/blob/v1.0.0/src/commands/generate.ts)_
@@ -78,6 +79,7 @@ ARGUMENTS
 OPTIONS
   -h, --help       show CLI help
   -o, --overwrite  overwrite the output file if it exists
+  -v, --verbose
 ```
 
 _See code: [src/commands/image.ts](https://github.com/jmerle/png-to-box2d/blob/v1.0.0/src/commands/image.ts)_
