@@ -40,9 +40,8 @@ To do
     const inputExists = await fs.pathExists(args.input);
     if (inputExists) {
       const stat = await fs.stat(args.input);
-
-      if (!stat.isFile() || !args.input.endsWith('.json')) {
-        this.error('The input path does not point to a JSON file', { exit: 1 });
+      if (!stat.isFile()) {
+        this.error('The input path does not point to a file', { exit: 1 });
       }
     } else {
       this.error('The input path does not exist', { exit: 1 });
