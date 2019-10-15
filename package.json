@@ -23,10 +23,10 @@
   ],
   "scripts": {
     "lint": "yarn lint:tslint && yarn lint:prettier",
-    "lint:prettier": "prettier --check --ignore-path .gitignore '**/*.{js,ts,scss,yml,json}'",
+    "lint:prettier": "prettier --check --ignore-path .gitignore '**/*.{ts,json}'",
     "lint:tslint": "tslint -p tsconfig.json -c tslint.json -t stylish",
     "fix": "yarn fix:tslint && yarn fix:prettier",
-    "fix:prettier": "prettier --write --ignore-path .gitignore '**/*.{js,ts,scss,yml,json}'",
+    "fix:prettier": "prettier --write --ignore-path .gitignore '**/*.{ts,json}'",
     "fix:tslint": "yarn lint:tslint --fix",
     "postpack": "rm -f oclif.manifest.json",
     "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
@@ -37,11 +37,13 @@
     "@oclif/command": "^1",
     "@oclif/config": "^1",
     "@oclif/plugin-help": "^2",
+    "command-exists": "^1.2.8",
     "tslib": "^1"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1",
     "@oclif/tslint": "^3",
+    "@types/command-exists": "^1.2.0",
     "@types/node": "^10",
     "globby": "^10",
     "husky": "^3.0.9",
