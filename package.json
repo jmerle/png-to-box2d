@@ -23,7 +23,7 @@
   ],
   "scripts": {
     "release": "np",
-    "readme": "oclif-dev readme",
+    "version": "oclif-dev readme && git add README.md",
     "lint": "yarn lint:tslint && yarn lint:prettier",
     "lint:prettier": "prettier --check --ignore-path .gitignore '**/*.{ts,json}'",
     "lint:tslint": "tslint -p tsconfig.json -c tslint.json -t stylish",
@@ -31,8 +31,7 @@
     "fix:prettier": "prettier --write --ignore-path .gitignore '**/*.{ts,json}'",
     "fix:tslint": "yarn lint:tslint --fix",
     "postpack": "rm -f oclif.manifest.json",
-    "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
-    "postversion": "yarn readme && git add -A && git commit -m \"Update readme\""
+    "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme"
   },
   "dependencies": {
     "@oclif/command": "^1",
