@@ -13,10 +13,10 @@ export default class Generate extends BaseCommand {
 
   public static examples = [
     `$ png-to-box2d generate images/castle.png
-Converted image in images/cannon.png to triangles in images/castle.png.json
+Converted image in images/castle.png to triangles in images/castle.png.json
 `,
     `$ png-to-box2d generate --overwrite --tolerance 5 images/castle.png out/triangles.json
-Converted image in images/cannon.png to triangles in out/triangles.json
+Converted image in images/castle.png to triangles in out/triangles.json
 `,
   ];
 
