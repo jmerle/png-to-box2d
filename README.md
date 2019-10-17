@@ -102,7 +102,7 @@ EXAMPLES
   Converted image in images/castle.png to triangles in out/triangles.json
 ```
 
-_See code: [src/commands/generate.ts](https://github.com/jmerle/png-to-box2d/blob/v1.0.4/src/commands/generate.ts)_
+_See code: [src/commands/generate.ts](https://github.com/jmerle/png-to-box2d/blob/v1.1.0/src/commands/generate.ts)_
 
 ## `png-to-box2d help [COMMAND]`
 
@@ -143,5 +143,5 @@ EXAMPLE
   Converted triangles in out/triangles.json to image in out/image.png
 ```
 
-_See code: [src/commands/image.ts](https://github.com/jmerle/png-to-box2d/blob/v1.0.4/src/commands/image.ts)_
+_See code: [src/commands/image.ts](https://github.com/jmerle/png-to-box2d/blob/v1.1.0/src/commands/image.ts)_
 <!-- commandsstop -->
