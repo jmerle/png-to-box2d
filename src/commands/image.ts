@@ -62,25 +62,29 @@ Converted triangles in out/triangles.json to image in out/image.png
     const inputData = JSON.parse(inputBuffer.toString());
     const shapes: Array<Array<[Point, Point, Point]>> = inputData.shapes;
 
-    const width = Math.max(
-      ...shapes.map(triangleList => {
-        return Math.max(
-          ...triangleList.map(triangle => {
-            return Math.max(...triangle.map(point => point.x));
-          }),
-        );
-      }),
-    );
+    const width =
+      inputData.width ||
+      Math.max(
+        ...shapes.map(triangleList => {
+          return Math.max(
+            ...triangleList.map(triangle => {
+              return Math.max(...triangle.map(point => point.x));
+            }),
+          );
+        }),
+      );
 
-    const height = Math.max(
-      ...shapes.map(triangleList => {
-        return Math.max(
-          ...triangleList.map(triangle => {
-            return Math.max(...triangle.map(point => point.y));
-          }),
-        );
-      }),
-    );
+    const height =
+      inputData.height ||
+      Math.max(
+        ...shapes.map(triangleList => {
+          return Math.max(
+            ...triangleList.map(triangle => {
+              return Math.max(...triangle.map(point => point.y));
+            }),
+          );
+        }),
+      );
 
     const canvas = createCanvas(width, height);
     const ctx = canvas.getContext('2d');

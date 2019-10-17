@@ -31,11 +31,8 @@ function shapeToTriangles(shape: Shape): any {
   });
 }
 
-export async function shapesToTriangles(inputPath: string, outputPath: string): Promise<void> {
+export async function shapesToTriangulatedShapes(inputPath: string): Promise<any[]> {
   const inputBuffer = await fs.readFile(inputPath);
   const inputData = JSON.parse(inputBuffer.toString());
-
-  const triangles = inputData.shapes.map((shape: Shape) => shapeToTriangles(shape));
-  const outputContent = JSON.stringify({ shapes: triangles });
-  await fs.writeFile(outputPath, outputContent);
+  return inputData.shapes.map((shape: Shape) => shapeToTriangles(shape));
 }

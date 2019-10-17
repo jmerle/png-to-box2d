@@ -2,11 +2,12 @@ import { flags } from '@oclif/command';
 import * as commandExists from 'command-exists';
 import * as execa from 'execa';
 import * as fs from 'fs-extra';
+import { imageSize } from 'image-size';
 import * as os from 'os';
 import * as path from 'path';
 import { BaseCommand } from '../BaseCommand';
-import { postScriptToShapes } from '../generate/postscript-to-shapes';
-import { shapesToTriangles } from '../generate/shapes-to-triangles';
+import { postScriptToShapes } from '../convert/postscript-to-shapes';
+import { shapesToTriangulatedShapes } from '../convert/shapes-to-triangulated-shapes';
 
 export default class Generate extends BaseCommand {
   public static description = 'convert a PNG image to Box2D shape data';
@@ -126,7 +127,18 @@ see https://mourner.github.io/simplify-js/ for more information
     // Convert the shape data into triangle data
     this.info(`Converting ${shapesPath} to triangle shapes in ${outputPath}`);
     await fs.ensureFile(outputPath);
-    await shapesToTriangles(shapesPath, outputPath);
+    const triangles = await shapesToTriangulatedShapes(shapesPath);
+
+    const inputDimensions = await imageSize(inputPath);
+
+    const data = {
+      width: inputDimensions.width,
+      height: inputDimensions.height,
+      shapes: triangles,
+    };
+
+    const outputContent = JSON.stringify(data);
+    await fs.writeFile(outputPath, outputContent);
 
     this.log(`Converted image in ${inputPath} to triangles in ${outputPath}`);
   }

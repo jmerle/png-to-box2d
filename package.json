@@ -41,6 +41,7 @@
     "command-exists": "^1.2.8",
     "execa": "^3.1.0",
     "fs-extra": "^8.1.0",
+    "image-size": "^0.8.3",
     "poly2tri": "^1.5.0",
     "simplify-js": "^1.2.3",
     "tslib": "^1"

@@ -27,6 +27,8 @@ The generated JSON file will have the following format:
 
 ```json
 {
+  "width": 256,
+  "height": 256,
   "shapes": [
     [
       [{ "x": 253, "y": 148 }, { "x": 85, "y": 93 }, { "x": 50, "y": 160 }],
@@ -44,7 +46,7 @@ The generated JSON file will have the following format:
 }
 ```
 
-The `shapes` array contains all shapes. Each shape is an array of triangles, each containing three coordinates. (0, 0) is seen as the top-left corner of the image.
+The `width` and the `height` are simply the dimensions of the input image. The `shapes` array contains all triangulated shapes, where each shape is an array of triangles, each containing three coordinates. (0, 0) is seen as the top-left corner of the image.
 
 The [`image`](#png-to-box2d-image-input-output) command can be used to visualize the generated JSON file. Simply run `png-to-box2d image triangles.json image.png` and the `image.png` file will contain a visualization of the triangles defined in `triangles.json`.
 
