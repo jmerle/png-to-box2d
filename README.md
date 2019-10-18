@@ -57,10 +57,10 @@ The [`image`](#png-to-box2d-image-input-output) command can be used to visualize
 
 ```
 $ png-to-box2d generate images/castle.png out/triangles.json
-Converted image in images/castle.png to triangles in out/triangles.json
+Converted image in images/castle.png to triangulated shapes in out/triangles.json
 
 $ png-to-box2d image out/triangles.json out/image.png
-Converted triangles in out/triangles.json to image in out/image.png
+Converted triangulated shapes in out/triangles.json to image in out/image.png
 ```
 
 `out/image.png`:
@@ -86,6 +86,7 @@ ARGUMENTS
   OUTPUT  [default: {INPUT}.json] where the generated JSON file should be placed
 
 OPTIONS
+  -b, --beautify             beautify the generated json file
   -h, --help                 show CLI help
   -o, --overwrite            overwrite the output file if it exists
 

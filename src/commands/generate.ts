@@ -5,6 +5,7 @@ import * as fs from 'fs-extra';
 import { imageSize } from 'image-size';
 import * as os from 'os';
 import * as path from 'path';
+import * as prettier from 'prettier';
 import { BaseCommand } from '../BaseCommand';
 import { postScriptToShapes } from '../convert/postscript-to-shapes';
 import { shapesToTriangulatedShapes } from '../convert/shapes-to-triangulated-shapes';
@@ -14,10 +15,10 @@ export default class Generate extends BaseCommand {
 
   public static examples = [
     `$ png-to-box2d generate images/castle.png
-Converted image in images/castle.png to triangles in images/castle.png.json
+Converted image in images/castle.png to triangulated shapes in images/castle.png.json
 `,
     `$ png-to-box2d generate --overwrite --tolerance 5 images/castle.png out/triangles.json
-Converted image in images/castle.png to triangles in out/triangles.json
+Converted image in images/castle.png to triangulated shapes in out/triangles.json
 `,
   ];
 
@@ -36,6 +37,11 @@ see https://mourner.github.io/simplify-js/ for more information
       `.trim(),
       default: 2.5,
       parse: parseFloat,
+    }),
+    beautify: flags.boolean({
+      char: 'b',
+      description: 'beautify the generated json file',
+      default: false,
     }),
   };
 
@@ -125,8 +131,7 @@ see https://mourner.github.io/simplify-js/ for more information
     await postScriptToShapes(tracedPath, shapesPath, tolerance);
 
     // Convert the shape data into triangle data
-    this.info(`Converting ${shapesPath} to triangle shapes in ${outputPath}`);
-    await fs.ensureFile(outputPath);
+    this.info(`Converting ${shapesPath} to triangulated shapes`);
     const triangles = await shapesToTriangulatedShapes(shapesPath);
 
     const inputDimensions = await imageSize(inputPath);
@@ -137,10 +142,18 @@ see https://mourner.github.io/simplify-js/ for more information
       shapes: triangles,
     };
 
-    const outputContent = JSON.stringify(data);
-    await fs.writeFile(outputPath, outputContent);
+    let outputContent = JSON.stringify(data) + '\n';
 
-    this.log(`Converted image in ${inputPath} to triangles in ${outputPath}`);
+    if (this.flags.beautify) {
+      outputContent = prettier.format(outputContent, {
+        parser: 'json',
+        printWidth: 120,
+      });
+    }
+
+    await fs.ensureFile(outputPath);
+    await fs.writeFile(outputPath, outputContent);
+    this.log(`Converted image in ${inputPath} to triangulated shapes in ${outputPath}`);
   }
 
   private async executeCommand(command: string, ...args: string[]): Promise<void> {

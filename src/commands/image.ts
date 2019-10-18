@@ -8,7 +8,7 @@ export default class Image extends BaseCommand {
 
   public static examples = [
     `$ png-to-box2d image out/triangles.json out/image.png
-Converted triangles in out/triangles.json to image in out/image.png
+Converted triangulated shapes in out/triangles.json to image in out/image.png
 `,
   ];
 
@@ -116,6 +116,6 @@ Converted triangles in out/triangles.json to image in out/image.png
     await fs.ensureFile(outputPath);
     await fs.writeFile(outputPath, canvas.toBuffer('image/png'));
 
-    this.log(`Converted triangles in ${inputPath} to image in ${outputPath}`);
+    this.log(`Converted triangulated shapes in ${inputPath} to image in ${outputPath}`);
   }
 }
