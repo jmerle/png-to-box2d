@@ -3,9 +3,9 @@ import * as commandExists from 'command-exists';
 import * as execa from 'execa';
 import * as fs from 'fs-extra';
 import { imageSize } from 'image-size';
+import * as stringify from 'json-stringify-pretty-compact';
 import * as os from 'os';
 import * as path from 'path';
-import * as prettier from 'prettier';
 import { BaseCommand } from '../BaseCommand';
 import { postScriptToShapes } from '../convert/postscript-to-shapes';
 import { shapesToTriangulatedShapes } from '../convert/shapes-to-triangulated-shapes';
@@ -169,14 +169,8 @@ see https://mourner.github.io/simplify-js/ for more information
       data.paths = paths;
     }
 
-    let outputContent = JSON.stringify(data) + '\n';
-
-    if (this.flags.beautify) {
-      outputContent = prettier.format(outputContent, {
-        parser: 'json',
-        printWidth: 120,
-      });
-    }
+    let outputContent = this.flags.beautify ? stringify(data) : JSON.stringify(data);
+    outputContent = outputContent.trim() + '\n';
 
     await fs.ensureFile(outputPath);
     await fs.writeFile(outputPath, outputContent);

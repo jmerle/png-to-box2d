@@ -42,8 +42,8 @@
     "execa": "^3.2.0",
     "fs-extra": "^8.1.0",
     "image-size": "^0.8.3",
+    "json-stringify-pretty-compact": "^2.0.0",
     "poly2tri": "^1.5.0",
-    "prettier": "^1.18.2",
     "simplify-js": "^1.2.3",
     "tslib": "^1"
   },
@@ -58,6 +58,7 @@
     "husky": "^3.0.9",
     "lint-staged": "^9.4.2",
     "np": "^5.1.1",
+    "prettier": "^1.18.2",
     "ts-node": "^8",
     "tslint": "^5.20.0",
     "tslint-config-prettier": "^1.18.0",
