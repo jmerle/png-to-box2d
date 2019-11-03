@@ -1,6 +1,5 @@
 // Everything in this file comes from https://github.com/anko/image-to-box2d-body/blob/master/shapesToTriangles.js
 
-import * as fs from 'fs-extra';
 import { IPointLike, SweepContext } from 'poly2tri';
 
 function extractXY(point: IPointLike): Point {
@@ -31,8 +30,6 @@ function shapeToTriangles(shape: Shape): any {
   });
 }
 
-export async function shapesToTriangulatedShapes(inputPath: string): Promise<any[]> {
-  const inputBuffer = await fs.readFile(inputPath);
-  const inputData = JSON.parse(inputBuffer.toString());
-  return inputData.shapes.map((shape: Shape) => shapeToTriangles(shape));
+export async function shapesToTriangulatedShapes(shapes: Shape[]): Promise<any[]> {
+  return shapes.map((shape: Shape) => shapeToTriangles(shape));
 }

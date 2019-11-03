@@ -90,7 +90,7 @@ function processLine(line: string): void {
   }
 }
 
-export async function postScriptToShapes(inputPath: string, outputPath: string, tolerance: number): Promise<void> {
+export async function postScriptToShapes(inputPath: string, outputPath: string, tolerance: number): Promise<Shape[]> {
   reset(tolerance);
 
   const inputBuffer = await fs.readFile(inputPath);
@@ -103,6 +103,5 @@ export async function postScriptToShapes(inputPath: string, outputPath: string, 
     processLine(line);
   }
 
-  const outputContent = JSON.stringify({ shapes });
-  await fs.writeFile(outputPath, outputContent);
+  return shapes;
 }

@@ -38,6 +38,11 @@ see https://mourner.github.io/simplify-js/ for more information
       default: 2.5,
       parse: parseFloat,
     }),
+    path: flags.boolean({
+      char: 'p',
+      description: 'include the full paths of the shapes in the generated json file',
+      default: false,
+    }),
     beautify: flags.boolean({
       char: 'b',
       description: 'beautify the generated json file',
@@ -127,20 +132,42 @@ see https://mourner.github.io/simplify-js/ for more information
 
     // Parse the traced PostScript file and convert it to a JSON file containing all shapes
     const shapesPath = this.getTempPath(inputPath, 'shapes.json');
-    this.info(`Converting ${tracedPath} to shapes in ${shapesPath}`);
-    await postScriptToShapes(tracedPath, shapesPath, tolerance);
+    this.info(`Converting ${tracedPath} to shape paths`);
+    const shapes = await postScriptToShapes(tracedPath, shapesPath, tolerance);
 
     // Convert the shape data into triangle data
-    this.info(`Converting ${shapesPath} to triangulated shapes`);
-    const triangles = await shapesToTriangulatedShapes(shapesPath);
+    this.info(`Converting shape paths to triangulated shapes`);
+    const triangles = await shapesToTriangulatedShapes(shapes);
 
     const inputDimensions = await imageSize(inputPath);
 
-    const data = {
+    const data: any = {
       width: inputDimensions.width,
       height: inputDimensions.height,
       shapes: triangles,
     };
+
+    if (this.flags.path) {
+      const paths: Point[][] = [];
+
+      for (const shape of shapes) {
+        const currentPath: Point[] = [];
+
+        if (shape.mainPath !== null) {
+          for (const point of shape.mainPath) {
+            currentPath.push({
+              x: point.x,
+              y: point.y,
+            });
+          }
+        }
+
+        currentPath.push(currentPath[0]);
+        paths.push(currentPath);
+      }
+
+      data.paths = paths;
+    }
 
     let outputContent = JSON.stringify(data) + '\n';
 
