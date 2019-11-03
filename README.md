@@ -89,6 +89,7 @@ OPTIONS
   -b, --beautify             beautify the generated json file
   -h, --help                 show CLI help
   -o, --overwrite            overwrite the output file if it exists
+  -p, --path                 include the full paths of the shapes in the generated json file
 
   -t, --tolerance=tolerance  [default: 2.5] path tolerance in px where less tolerance means more triangles per shape
                              see https://mourner.github.io/simplify-js/ for more information
@@ -103,7 +104,7 @@ EXAMPLES
   Converted image in images/castle.png to triangulated shapes in out/triangles.json
 ```
 
-_See code: [src/commands/generate.ts](https://github.com/jmerle/png-to-box2d/blob/v1.2.0/src/commands/generate.ts)_
+_See code: [src/commands/generate.ts](https://github.com/jmerle/png-to-box2d/blob/v1.3.0/src/commands/generate.ts)_
 
 ## `png-to-box2d help [COMMAND]`
 
@@ -144,5 +145,5 @@ EXAMPLE
   Converted triangulated shapes in out/triangles.json to image in out/image.png
 ```
 
-_See code: [src/commands/image.ts](https://github.com/jmerle/png-to-box2d/blob/v1.2.0/src/commands/image.ts)_
+_See code: [src/commands/image.ts](https://github.com/jmerle/png-to-box2d/blob/v1.3.0/src/commands/image.ts)_
 <!-- commandsstop -->
