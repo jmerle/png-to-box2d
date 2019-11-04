@@ -31,5 +31,15 @@ function shapeToTriangles(shape: Shape): any {
 }
 
 export async function shapesToTriangulatedShapes(shapes: Shape[]): Promise<any[]> {
-  return shapes.map((shape: Shape) => shapeToTriangles(shape));
+  const triangles: any[] = [];
+
+  for (const shape of shapes) {
+    try {
+      triangles.push(shapeToTriangles(shape));
+    } catch (err) {
+      // Ignore the shape if it causes an error with poly2tri
+    }
+  }
+
+  return triangles;
 }
