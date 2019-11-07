@@ -38,6 +38,15 @@ see https://mourner.github.io/simplify-js/ for more information
       default: 2.5,
       parse: parseFloat,
     }),
+    alpha: flags.option<number>({
+      char: 'a',
+      description: `
+the percentage of when an alpha value should be seen as part of the background
+when set to X, every pixel that has a transparency of at least X% will be seen as part of the background
+      `.trim(),
+      default: 25,
+      parse: parseFloat,
+    }),
     path: flags.boolean({
       char: 'p',
       description: 'include the full paths of the shapes in the generated json file',
@@ -72,6 +81,14 @@ see https://mourner.github.io/simplify-js/ for more information
       this.err('Tolerance should be at least 0.01');
     }
 
+    if (this.flags.alpha < 0) {
+      this.err('Alpha threshold should be at least 0');
+    }
+
+    if (this.flags.alpha > 100) {
+      this.err('Alpha threshold should not be greater than 100');
+    }
+
     await this.ensureCommandExists('convert');
     await this.ensureCommandExists('potrace');
 
@@ -92,7 +109,7 @@ see https://mourner.github.io/simplify-js/ for more information
       }
     }
 
-    await this.generateShapeData(this.args.input, this.args.output, this.flags.tolerance);
+    await this.generateShapeData(this.args.input, this.args.output, this.flags.tolerance, 100 - this.flags.alpha);
   }
 
   private async ensureCommandExists(command: string): Promise<void> {
@@ -104,8 +121,13 @@ see https://mourner.github.io/simplify-js/ for more information
   }
 
   // Most of the logic in this method comes from https://github.com/anko/image-to-box2d-body
-  private async generateShapeData(inputPath: string, outputPath: string, tolerance: number): Promise<void> {
-    this.info(`input: ${inputPath}, output: ${outputPath}, tolerance: ${tolerance}`);
+  private async generateShapeData(
+    inputPath: string,
+    outputPath: string,
+    tolerance: number,
+    alphaTreshold: number,
+  ): Promise<void> {
+    this.info(`input: ${inputPath}, output: ${outputPath}, tolerance: ${tolerance}, alpha treshold: ${alphaTreshold}`);
 
     // Extract the alpha channel into a separate image
     const alphaPath = this.getTempPath(inputPath, 'alpha.png');
@@ -114,7 +136,14 @@ see https://mourner.github.io/simplify-js/ for more information
     // Threshold and negate the alpha channel image. Also convert to the (extremely simple
     // and text-based) PPM image format, because that's what potrace understands.
     const thresholdedAlphaPath = this.getTempPath(inputPath, 'tresholded-alpha.ppm');
-    await this.executeCommand('convert', alphaPath, '-threshold', '75%%', '-negate', thresholdedAlphaPath);
+    await this.executeCommand(
+      'convert',
+      alphaPath,
+      '-threshold',
+      `${alphaTreshold}%%`,
+      '-negate',
+      thresholdedAlphaPath,
+    );
 
     // Trace thresholded image into a PostScript file, using the most verbose,
     // least-compressed options available. This makes it easier to parse later.
