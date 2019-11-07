@@ -109,7 +109,7 @@ when set to X, every pixel that has a transparency of at least X% will be seen a
       }
     }
 
-    await this.generateShapeData(this.args.input, this.args.output, this.flags.tolerance, 100 - this.flags.alpha);
+    await this.generateShapeData(this.args.input, this.args.output, this.flags.tolerance, this.flags.alpha);
   }
 
   private async ensureCommandExists(command: string): Promise<void> {
@@ -125,9 +125,11 @@ when set to X, every pixel that has a transparency of at least X% will be seen a
     inputPath: string,
     outputPath: string,
     tolerance: number,
-    alphaTreshold: number,
+    alphaThreshold: number,
   ): Promise<void> {
-    this.info(`input: ${inputPath}, output: ${outputPath}, tolerance: ${tolerance}, alpha treshold: ${alphaTreshold}`);
+    this.info(
+      `input: ${inputPath}, output: ${outputPath}, tolerance: ${tolerance}, alpha threshold: ${alphaThreshold}%`,
+    );
 
     // Extract the alpha channel into a separate image
     const alphaPath = this.getTempPath(inputPath, 'alpha.png');
@@ -140,7 +142,7 @@ when set to X, every pixel that has a transparency of at least X% will be seen a
       'convert',
       alphaPath,
       '-threshold',
-      `${alphaTreshold}%%`,
+      `${100 - alphaThreshold}%%`,
       '-negate',
       thresholdedAlphaPath,
     );
