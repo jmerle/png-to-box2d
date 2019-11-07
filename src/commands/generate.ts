@@ -137,7 +137,7 @@ when set to X, every pixel that has a transparency of at least X% will be seen a
 
     // Threshold and negate the alpha channel image. Also convert to the (extremely simple
     // and text-based) PPM image format, because that's what potrace understands.
-    const thresholdedAlphaPath = this.getTempPath(inputPath, 'tresholded-alpha.ppm');
+    const thresholdedAlphaPath = this.getTempPath(inputPath, 'thresholded-alpha.ppm');
     await this.executeCommand(
       'convert',
       alphaPath,
